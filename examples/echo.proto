@@ -1,0 +1,14 @@
+syntax = "proto3";
+package sample.v1;
+message Echo {
+  string text = 1;
+  int64 revision = 2;
+  bytes payload = 3;
+  repeated string tags = 4;
+  optional string note = 5;
+  oneof choice { string title = 6; int32 number = 7; }
+  map<string, string> labels = 8;
+  message Child { string name = 1; }
+  Child child = 9;
+}
+message ApiError { string code = 1; string message = 2; }

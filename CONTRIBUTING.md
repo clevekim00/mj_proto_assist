@@ -1,6 +1,6 @@
 # 기여 안내
 
-현재는 기획·설계 단계입니다. 먼저 docs/PRD.md, docs/DESIGN.md, docs/INTEGRATIONS.md를 읽고 범위와 호환성 계약을 확인하세요. 실행·빌드 명령은 구현이 추가된 뒤 안내합니다.
+현재는 초기 구현 단계입니다. 먼저 docs/PRD.md, docs/DESIGN.md, docs/INTEGRATIONS.md를 읽고 범위와 호환성 계약을 확인하세요. 실행·빌드·테스트 명령은 README.md와 docs/TEST_CASES.md를 따릅니다.
 
 설계 변경에는 해결할 문제, 대안, 호환성 영향, 검증 계획을 포함해 주세요. 범용 기능은 Core에, 제품별 기능은 소비 프로젝트에 둡니다. 서버는 Spring Boot + Kotlin을 기본으로 합니다.
 

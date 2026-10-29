@@ -1,6 +1,23 @@
 # mj_proto_assist 구현 설계서
 
-작성일: 2026-10-29. 상태: 개발 전 제안. 제품 범위와 수용 기준은 [PRD](PRD.md)를 따른다.
+작성일: 2026-10-29. 상태: 초기 구현 및 후속 설계. 제품 범위와 수용 기준은 [PRD](PRD.md)를 따른다.
+
+## 2026-10-29 초기 구현 상태
+
+이번 구현은 descriptor 기반 로컬 도구의 첫 동작 경로입니다. 아래의 원래 MVP 요구사항과 설계는 후속 목표도 포함하며, 표에 없는 기능의 완료를 뜻하지 않습니다.
+
+| 요구사항 | 현재 구현과 검증 범위 | 남은 수용 기준 |
+|---|---|---|
+| F01–F04 | descriptor 등록·타입 탐색·encode/decode, import 의존성·중복·proto2 거절, int64·bytes·optional·oneof·map·중첩·unknown field 테스트 | .proto 컴파일 어댑터, 전체 WKT·Any·enum fixture 확대, 상세 오류 경로 |
+| F05–F06 | HTTPS/명시 HTTP POST, bytes 보존, 타임아웃, 10MiB 상한, redirect·자동 재시도 없음, raw 결과·상태별 디코딩 | 실행 중 취소, 압축 응답 지원 |
+| F07 | types·encode·decode·serve-stdio, 바이너리 stdout·진단 stderr 분리 | CLI call, 세분화 exit code |
+| F08 | React UI, 동일 origin Spring Boot, bootstrap 세션·Origin/Host 검증, schema·편집·전송·오류·raw 탭 | 취소 UI, 세션 재접속 UX·자동 UI 회귀 테스트 확대 |
+| F09 | 자동 저장 없음 | 컬렉션·환경변수 저장 및 재실행 전체 |
+| I01/I02/C01 | IPC major 1 검사, 합성 fixture, stdio 변환 계약 테스트 | Dart 어댑터·실제 ApiLens/mj_fav·TypeScript 검증, 동시성·취소·재시작 |
+| S01 | 로그에 대상 본문·헤더 미기록, 오류 원문 비반사, 로컬 인증·Origin 차단 테스트 | 공개 베타 전 추가 보안 검토 |
+
+실행·테스트 절차는 [README](../README.md)를 따릅니다. 런타임 동봉 배포나 성능 목표 달성은 아직 주장하지 않습니다.
+
 
 ## 1 아키텍처 결정
 
@@ -40,7 +57,7 @@ fixtures/              # 언어 간 상호운용 golden 데이터
 scripts/               # 문서·fixture 검증, 향후 패키징
 ```
 
-이는 향후 구현 구조다. 초기 문서 저장소에 실행 가능한 모듈이 존재한다고 표시하지 않는다. Gradle Kotlin DSL을 사용하고 Java·Kotlin·Spring·protoc·Protobuf 런타임 버전은 구현 착수 시 호환 표를 검증해 고정한다. Node.js는 독립 UI 빌드·테스트용이며 Kotlin 실행부의 런타임은 JVM이다.
+현재 core/, cli/, local-api/, ui/를 구현했다. 그 외 모듈과 아래 미검증 기능은 후속 구조다. Gradle Kotlin DSL을 사용하고 Java·Kotlin·Spring·protoc·Protobuf 런타임 버전은 구현 착수 시 호환 표를 검증해 고정한다. Node.js는 독립 UI 빌드·테스트용이며 Kotlin 실행부의 런타임은 JVM이다.
 
 ## 3 데이터 계약
 
@@ -149,7 +166,7 @@ JSON 경로를 통해 임의 파일을 읽는 API를 제공하지 않는다. `.p
 
 ## 7 CLI 계약
 
-다음은 구현 예정 명령이며 현재 실행 예제가 아니다.
+아래는 목표 CLI 계약이다. 현재 types·encode·decode·serve-stdio만 구현했으며 실행 경로는 README를 따른다.
 
 ```text
 proto-assist types --descriptor schema.pb
